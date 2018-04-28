@@ -9,6 +9,7 @@ local.properties
 
 # Gradle generated files
 .gradle/
+gradle/
 
 # Signing files
 .signing/
@@ -25,7 +26,7 @@ local.properties
 .idea/modules.xml
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
-.idea
+.idea/
 *.iml
 
 # OS-specific files
