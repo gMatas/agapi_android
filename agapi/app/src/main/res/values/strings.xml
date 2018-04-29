@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AGAPI</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_my_profile">Mano profilis</string>
+    <string name="title_contacts">Kontaktai</string>
+    <string name="title_settings">Nustatymai</string>
 </resources>
