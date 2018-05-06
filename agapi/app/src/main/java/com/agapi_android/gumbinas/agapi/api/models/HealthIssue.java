@@ -6,7 +6,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HealthIssue {
-    public int id;
+    public long id;
     public HealthIssueCategory category;
-    public List details;
+    public String description;
+
+    public HealthIssue() {
+        id = -1;
+        category = null;
+        description = "";
+    }
+
+    public HealthIssue(HealthIssueCategory category, String description) {
+        this.category = category;
+        this.description = description;
+    }
 }
