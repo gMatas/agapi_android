@@ -5,12 +5,12 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -31,9 +31,9 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 
 import com.agapi_android.gumbinas.agapi.api.controllers.AgapiController;
+import com.agapi_android.gumbinas.agapi.api.enumerators.HealthIssueCategory;
 import com.agapi_android.gumbinas.agapi.api.models.HealthIssue;
 import com.agapi_android.gumbinas.agapi.api.models.Profile;
-import com.agapi_android.gumbinas.agapi.api.enumerators.HealthIssueCategory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,9 +41,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ProfileCreateFormActivity extends AppCompatActivity {
+public class ProfileCreateFormActivity_OLD extends AppCompatActivity {
 
-    private AgapiController _agapi;
     private Profile _userProfile;
     private List<HealthIssue> _userHealthIssues;
     private List<HealthIssueCategory> _selectedHealthIssueCategories;
@@ -101,7 +100,7 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
             int month = currentCalendar.get(Calendar.MONTH);
             int date = currentCalendar.get(Calendar.DATE);
             DatePickerDialogFragment datePicker = new DatePickerDialogFragment(
-                    ProfileCreateFormActivity.this,
+                    ProfileCreateFormActivity_OLD.this,
                     mDateOnDateSetListener,
                     year, month, date);
             datePicker.show();
@@ -192,15 +191,14 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            _agapi.saveUserProfile(_userProfile);
+            AgapiController agapi;
+            agapi = new AgapiController(ProfileCreateFormActivity_OLD.this);
+            agapi.saveUserProfile(_userProfile);
 
             if (_provideHealthInformation) {
                 // Save user health issues to local cache
                 saveUserHealthIssuesToLocalCache();
-                _agapi.getUserHealthInformation().saveHealthIssues(_userHealthIssues);
-            } else {
-                _userHealthIssues.clear();
-                _agapi.getUserHealthInformation().saveHealthIssues(_userHealthIssues);
+                agapi.getUserHealthInformation().saveHealthIssues(_userHealthIssues);
             }
             finish();
         }
@@ -210,27 +208,18 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_template);
-        setTitle(R.string.form_profile_create_title);
 
+        // Create a user profile model object
         _userProfile = new Profile();
+
+        // Set a flag to provide user health information or not
         _provideHealthInformation = false;
+
+        // Create an empty list of all health issues user has
         _userHealthIssues = new LinkedList<>();
+
+        // Create an empty list of user health issues categories
         _selectedHealthIssueCategories = new LinkedList<>();
-
-        _agapi = new AgapiController(this);
-
-        if (_agapi.isUserProfileLoaded()) {
-            setTitle(R.string.form_profile_edit_title);
-            _userProfile = _agapi.getUserProfile();
-        }
-
-        if (!_agapi.getUserHealthInformation().isHealthIssuesEmpty()) {
-            _provideHealthInformation = true;
-            _userHealthIssues = _agapi.getUserHealthInformation().getHealthIssues();
-            for (HealthIssue issue : _userHealthIssues) {
-                _selectedHealthIssueCategories.add(issue.category);
-            }
-        }
 
         // Inflate profile creation layout inside form template content container
         _formScrollView = findViewById(R.id.form_content_layout);
@@ -549,14 +538,10 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         HealthIssueCategory category = HealthIssueCategory.values()[which];
-                        if (isChecked) {
+                        if (isChecked)
                             selectedCategories.add(category);
-                            unselectedCategories.remove(category);
-                        }
-                        else {
+                        else
                             unselectedCategories.add(category);
-                            selectedCategories.remove(category);
-                        }
                     }
                 }).setPositiveButton(R.string.dialog_button_confirm, new DialogInterface.OnClickListener() {
 
@@ -631,9 +616,7 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
 
     private void saveUserHealthIssuesToLocalCache() {
         // Clear old user health issues cache
-//        _userHealthIssues.clear();
-
-        List<HealthIssue> tempHealthIssues = new ArrayList<>();
+        _userHealthIssues.clear();
 
         // Save user provided health issue information to cache
         for (HealthIssueCategory category : _selectedHealthIssueCategories) {
@@ -642,15 +625,8 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
             assert editText != null;
             String healthIssueDescription = editText.getText().toString().trim();
             HealthIssue healthIssue = new HealthIssue(category, healthIssueDescription);
-            for (HealthIssue userHealthIssue : _userHealthIssues) {
-                if (userHealthIssue.category.name().equals(healthIssue.category.name())) {
-                    healthIssue.id = userHealthIssue.id;
-                }
-            }
-            tempHealthIssues.add(healthIssue);
+            _userHealthIssues.add(healthIssue);
         }
-        _userHealthIssues.clear();
-        _userHealthIssues.addAll(tempHealthIssues);
     }
 
     private void loadUserHealthIssuesFromLocalCache() {

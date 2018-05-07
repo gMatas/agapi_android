@@ -1,14 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.v7.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_my_profile_content_layout">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MANO PROFILIS" />
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="Informacija apie vartotojo profilį"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="18sp" />
 
+    <!-- First name -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_name" />
+
+        <TextView
+            android:id="@+id/form_profile_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Surname -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_surname" />
+
+        <TextView
+            android:id="@+id/form_profile_text_surname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Birth date-->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_birthdate" />
+
+        <TextView
+            android:id="@+id/form_profile_text_birthdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Phone -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_phone" />
+
+        <TextView
+            android:id="@+id/form_profile_text_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Email -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_email" />
+
+        <TextView
+            android:id="@+id/form_profile_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Street address -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_street_address" />
+
+        <TextView
+            android:id="@+id/form_profile_text_street_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- City -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_city" />
+
+        <TextView
+            android:id="@+id/form_profile_text_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Country -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_country" />
+
+        <TextView
+            android:id="@+id/form_profile_text_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Health information content layout -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/my_profile_health_information_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorDivider"
+            app:srcCompat="?attr/dividerHorizontal"
+            tools:ignore="contentDescription" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="Informacija apie sveikatos problemas"
+            android:textColor="@color/colorTextBlack"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/my_profile_health_information_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</android.support.v7.widget.LinearLayoutCompat>

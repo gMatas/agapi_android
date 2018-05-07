@@ -14,7 +14,6 @@ public class UserProfileEntity implements BaseColumns {
     public static final String COLUMN_NAME_EMAIL = "email";
     public static final String COLUMN_NAME_CITY = "city";
     public static final String COLUMN_NAME_COUNTRY = "country";
-    public static final String COLUMN_NAME_EMERGENCY_CONTACT_ID = "emergency_contact_id";
 
     private UserProfileEntity() {}
 }

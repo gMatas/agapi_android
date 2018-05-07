@@ -19,6 +19,8 @@
     <string name="form_button_right">Button2</string>
 
     <!-- Profile create form strings -->
+    <string name="form_profile_edit_title">Profilio redagavimas</string>
+    <string name="form_profile_create_title">Profilio sukūrimas</string>
     <string name="form_profile_create_button_left">Atšaukti</string>
     <string name="form_profile_create_button_right">Tęsti</string>
     <string name="form_profile_create_input_text_name">Vardas *</string>
@@ -34,5 +36,21 @@
     <string name="form_profile_health_create_dialog_select_title">Pasirinkite savo sveikatos negalavimų kategorijas</string>
     <string name="form_profile_health_create_button_left">Grįžti</string>
     <string name="form_profile_health_create_button_right">Išsaugoti</string>
+
+    <!-- Profile preview strings -->
+    <string name="form_profile_preview_button_right">Redaguoti</string>
+    <string name="form_profile_preview_button_left">Ištrinti</string>
+    <string name="form_profile_preview_text_none">Nėra</string>
+    <string name="form_profile_preview_text_no_description">Nėra detalios informacijos</string>
+    <string name="form_profile_preview_text_name">Vardas</string>
+    <string name="form_profile_preview_text_surname">Pavardė</string>
+    <string name="form_profile_preview_text_birthdate">Gimimo data</string>
+    <string name="form_profile_preview_text_phone">Telefonas</string>
+    <string name="form_profile_preview_text_email">El. paštas</string>
+    <string name="form_profile_preview_text_street_address">Gatvės adresas</string>
+    <string name="form_profile_preview_text_city">Miestas</string>
+    <string name="form_profile_preview_text_country">Šalis</string>
+
 </resources>
+
 

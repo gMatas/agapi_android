@@ -11,11 +11,13 @@ import com.agapi_android.gumbinas.agapi.api.entities.ContactEntity;
 import com.agapi_android.gumbinas.agapi.api.entities.HealthIssueEntity;
 import com.agapi_android.gumbinas.agapi.api.entities.IssueDetailEntity;
 import com.agapi_android.gumbinas.agapi.api.entities.UserProfileEntity;
+import com.agapi_android.gumbinas.agapi.api.enumerators.HealthIssueCategory;
 import com.agapi_android.gumbinas.agapi.api.models.Contact;
 import com.agapi_android.gumbinas.agapi.api.models.HealthIssue;
 import com.agapi_android.gumbinas.agapi.api.models.Profile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -34,10 +36,7 @@ public class AgapiDBHandler extends SQLiteOpenHelper {
             UserProfileEntity.COLUMN_NAME_EMAIL + " TEXT, " +
             UserProfileEntity.COLUMN_NAME_STREET_ADDRESS + " TEXT, " +
             UserProfileEntity.COLUMN_NAME_CITY + " TEXT, " +
-            UserProfileEntity.COLUMN_NAME_COUNTRY + " TEXT, " +
-//            UserProfileEntity.COLUMN_NAME_EMERGENCY_CONTACT_ID + " INTEGER);";
-            UserProfileEntity.COLUMN_NAME_EMERGENCY_CONTACT_ID + " INTEGER DEFAULT NULL REFERENCES " +
-            ContactEntity.TABLE_NAME + "(" + ContactEntity._ID + "));";
+            UserProfileEntity.COLUMN_NAME_COUNTRY + " TEXT);";
 
     private static final String SQL_CREATE_HEALTH_ISSUE_ENTITY =
             "CREATE TABLE IF NOT EXISTS " + HealthIssueEntity.TABLE_NAME + " (" +
@@ -129,15 +128,15 @@ public class AgapiDBHandler extends SQLiteOpenHelper {
                 UserProfileEntity.COLUMN_NAME_EMAIL,
                 UserProfileEntity.COLUMN_NAME_STREET_ADDRESS,
                 UserProfileEntity.COLUMN_NAME_CITY,
-                UserProfileEntity.COLUMN_NAME_COUNTRY,
-                UserProfileEntity.COLUMN_NAME_EMERGENCY_CONTACT_ID
+                UserProfileEntity.COLUMN_NAME_COUNTRY
             };
 
         Cursor cursor = db.query(UserProfileEntity.TABLE_NAME, projection,
                 null, null, null, null, null);
 
-        Profile profile = new Profile();
+        Profile profile = null;
         if (cursor.moveToFirst()) {
+            profile = new Profile();
             profile.id = cursor.getLong(cursor.getColumnIndexOrThrow(UserProfileEntity._ID));
             profile.firstName = cursor.getString(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_FIRST_NAME));
             profile.lastName = cursor.getString(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_LAST_NAME));
@@ -147,24 +146,34 @@ public class AgapiDBHandler extends SQLiteOpenHelper {
             profile.streetAddress = cursor.getString(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_STREET_ADDRESS));
             profile.city = cursor.getString(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_CITY));
             profile.country = cursor.getString(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_COUNTRY));
-            Contact emergencyContact = new Contact();
-            emergencyContact.id = cursor.getLong(cursor.getColumnIndexOrThrow(UserProfileEntity.COLUMN_NAME_EMERGENCY_CONTACT_ID));
-            cursor.close();
-
             Log.d("AGAPI_DEBUG", "getUserProfile: \n" + profile.toString());
-            return profile;
-        } else {
-            cursor.close();
-            return null;
         }
+        cursor.close();
+        return profile;
     }
 
     public void updateUserProfile(Profile userProfile) {
+        SQLiteDatabase db = getWritableDatabase();
 
+        ContentValues values = new ContentValues();
+        values.put(UserProfileEntity.COLUMN_NAME_FIRST_NAME, userProfile.firstName);
+        values.put(UserProfileEntity.COLUMN_NAME_LAST_NAME, userProfile.lastName);
+        values.put(UserProfileEntity.COLUMN_NAME_BIRTH_DATE, userProfile.birthDate);
+        values.put(UserProfileEntity.COLUMN_NAME_PHONE, userProfile.phone);
+        values.put(UserProfileEntity.COLUMN_NAME_EMAIL, userProfile.email);
+        values.put(UserProfileEntity.COLUMN_NAME_STREET_ADDRESS, userProfile.streetAddress);
+        values.put(UserProfileEntity.COLUMN_NAME_CITY, userProfile.city);
+        values.put(UserProfileEntity.COLUMN_NAME_COUNTRY, userProfile.country);
+
+        String selection = UserProfileEntity._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(userProfile.id)};
+
+        db.update(UserProfileEntity.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    public void removeUserProfile(Profile userProfile) {
-
+    public void removeUserProfile() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(UserProfileEntity.TABLE_NAME, null, null);
     }
 
     public long addHealthIssue(HealthIssue healthIssue) {
@@ -172,11 +181,57 @@ public class AgapiDBHandler extends SQLiteOpenHelper {
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(HealthIssueEntity.COLUMN_NAME_CATEGORY, healthIssue.category.getName());
+        values.put(HealthIssueEntity.COLUMN_NAME_CATEGORY, healthIssue.category.name());
         values.put(HealthIssueEntity.COLUMN_NAME_DESCRIPTION, healthIssue.description);
 
         // Insert values into the database
         return db.insert(HealthIssueEntity.TABLE_NAME, null, values);
+    }
+
+    public List<HealthIssue> getHealthIssues() {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                HealthIssueEntity._ID,
+                HealthIssueEntity.COLUMN_NAME_CATEGORY,
+                HealthIssueEntity.COLUMN_NAME_DESCRIPTION
+        };
+        Cursor cursor = db.query(HealthIssueEntity.TABLE_NAME, projection,
+                null, null, null, null, null);
+
+        List<HealthIssue> healthIssues = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                HealthIssue issue = new HealthIssue();
+                issue.id = cursor.getLong(cursor.getColumnIndexOrThrow(HealthIssueEntity._ID));
+                String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(HealthIssueEntity.COLUMN_NAME_CATEGORY));
+                issue.category = HealthIssueCategory.valueOf(categoryName);
+                issue.description = cursor.getString(cursor.getColumnIndexOrThrow(HealthIssueEntity.COLUMN_NAME_DESCRIPTION));
+                healthIssues.add(issue);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return healthIssues;
+    }
+
+    public void updateHealthIssue(HealthIssue healthIssue) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(HealthIssueEntity.COLUMN_NAME_CATEGORY, healthIssue.category.name());
+        values.put(HealthIssueEntity.COLUMN_NAME_DESCRIPTION, healthIssue.description);
+
+        String selection = HealthIssueEntity._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(healthIssue.id)};
+
+        db.update(HealthIssueEntity.TABLE_NAME, values, selection, selectionArgs);
+    }
+
+    public void removeHealthIssue(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = HealthIssueEntity._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+        db.delete(HealthIssueEntity.TABLE_NAME, selection, selectionArgs);
     }
 
     public Contact getContact(long id) {
@@ -193,22 +248,19 @@ public class AgapiDBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.query(ContactEntity.TABLE_NAME, projection, selection, selectionArgs,
                 null, null, null);
 
-        Contact contact = new Contact();
+        Contact contact = null;
         if (cursor.moveToFirst()) {
+            contact = new Contact();
             contact.id = cursor.getLong(cursor.getColumnIndexOrThrow(ContactEntity._ID));
             contact.name = cursor.getString(cursor.getColumnIndexOrThrow(ContactEntity.COLUMN_NAME_NAME));
             contact.phone = cursor.getString(cursor.getColumnIndexOrThrow(ContactEntity.COLUMN_NAME_PHONE));
             contact.email = cursor.getString(cursor.getColumnIndexOrThrow(ContactEntity.COLUMN_NAME_EMAIL));
             contact.personalMessage = cursor.getString(
                     cursor.getColumnIndexOrThrow(ContactEntity.COLUMN_NAME_PERSONAL_MESSAGE));
-            cursor.close();
-
             Log.d("AGAPI_DEBUG", "getContact: \n" + contact.toString());
-            return contact;
-        } else {
-            cursor.close();
-            return null;
         }
+        cursor.close();
+        return contact;
     }
 
     public void dropAll() {

@@ -10,7 +10,6 @@ import com.agapi_android.gumbinas.agapi.api.models.Profile;
 
 import java.util.List;
 
-
 public class AgapiController {
 
     private Profile _userProfile;
@@ -20,8 +19,7 @@ public class AgapiController {
 
     public AgapiController(Context context) {
         _adbHandler = new AgapiDBHandler(context);
-//        _adbHandler.dropAll();
-        _userProfile = _adbHandler.getUserProfile();
+        loadUserProfile();
         _userHealthInformation = new HealthInformation(_adbHandler);
     }
 
@@ -34,31 +32,48 @@ public class AgapiController {
     }
 
     public Profile getUserProfile() {
+        Profile profileCopy = new Profile();
+        profileCopy.id = _userProfile.id;
+        profileCopy.firstName = _userProfile.firstName;
+        profileCopy.lastName = _userProfile.lastName;
+        profileCopy.birthDate = _userProfile.birthDate;
+        profileCopy.phone = _userProfile.phone;
+        profileCopy.email = _userProfile.email;
+        profileCopy.streetAddress = _userProfile.streetAddress;
+        profileCopy.city = _userProfile.city;
+        profileCopy.country = _userProfile.country;
         return _userProfile;
     }
 
-    public void saveUserProfile(Profile profile) {
-        long profileId = _adbHandler.addUserProfile(profile);
-        if (profileId >= 0) {
-            _userProfile = profile;
-            _userProfile.id = profileId;
-            Log.d("AGAPI_DEBUG", "saveUserProfile: profile_id=" + profileId);
-        } else {
-            Log.e("AGAPI_DEBUG", "saveUserProfile: failed to put into database.");
-        }
-    }
-
-    public void saveUserHealthInformation(List<HealthIssue> healthIssues) {
-        _userHealthInformation.saveHealthIssues(healthIssues);
+    public HealthInformation getUserHealthInformation() {
+        return _userHealthInformation;
     }
 
     public void loadUserProfile() {
         _userProfile = _adbHandler.getUserProfile();
-
     }
 
-    public void loadUserHealthInformation() {
+    public void saveUserProfile(Profile profile) {
+        if (isUserProfileLoaded() && _userProfile.id == profile.id) {
+            _adbHandler.updateUserProfile(profile);
+            _userProfile = profile;
 
+        } else {
+            long profileId = _adbHandler.addUserProfile(profile);
+            if (profileId >= 0) {
+                _userProfile = profile;
+                _userProfile.id = profileId;
+                Log.d("AGAPI_DEBUG", "saveUserProfile: profile_id=" + profileId);
+            } else {
+                Log.e("AGAPI_DEBUG", "saveUserProfile: failed to put into database.");
+            }
+        }
+    }
+
+    public void clear() {
+        _userHealthInformation.clear();
+        _adbHandler.removeUserProfile();
+        _userProfile = null;
     }
 
     public void reset() {

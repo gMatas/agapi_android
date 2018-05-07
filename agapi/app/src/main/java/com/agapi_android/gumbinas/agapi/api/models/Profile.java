@@ -2,11 +2,6 @@ package com.agapi_android.gumbinas.agapi.api.models;
 
 import android.annotation.SuppressLint;
 
-import com.agapi_android.gumbinas.agapi.api.controllers.HealthInformation;
-
-import java.util.Date;
-
-
 public class Profile {
     public long id;
     public String firstName;
@@ -17,7 +12,6 @@ public class Profile {
     public String streetAddress;
     public String city;
     public String country;
-    public Contact emergencyContact;
 
     public Profile() {
         id = -1;
@@ -29,15 +23,13 @@ public class Profile {
         streetAddress = "";
         city = "";
         country = "";
-        emergencyContact = null;
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
         return String.format("id=%d\n firstName=%s\n lastName=%s\n birthDate=%s\n " +
-                        "phone=%s\n email=%s\n streetAddress=%s\n city=%s\n country=%s\n emergencyContact=%d",
-                id, firstName, lastName, birthDate, phone, email, streetAddress, city, country,
-                emergencyContact != null ? emergencyContact.id : null);
+                        "phone=%s\n email=%s\n streetAddress=%s\n city=%s\n country=%s",
+                id, firstName, lastName, birthDate, phone, email, streetAddress, city, country);
     }
 }
