@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorDivider">#c9c9c9</color>
     <color name="colorTextBlack">#262626</color>
+    <color name="colorCircleGreen">#7cb342</color>
+    <color name="colorCircleRed">#ef5350</color>
+    <color name="colorCircleGray">#9e9e9e</color>
 </resources>
+
+

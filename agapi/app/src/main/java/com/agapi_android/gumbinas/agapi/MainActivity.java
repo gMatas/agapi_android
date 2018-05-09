@@ -3,32 +3,41 @@ package com.agapi_android.gumbinas.agapi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.agapi_android.gumbinas.agapi.api.controllers.AgapiController;
+import com.agapi_android.gumbinas.agapi.api.models.Contact;
 import com.agapi_android.gumbinas.agapi.api.models.HealthIssue;
 import com.agapi_android.gumbinas.agapi.api.models.Profile;
 
+import java.util.Collections;
 import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_REFRESH_AGAPI_TO_MAIN = 0;
     private static final int REQUEST_CODE_REFRESH_AGAPI_TO_PROFILE = 1;
+    private static final int REQUEST_CODE_REFRESH_AGAPI_TO_CONTACTS = 2;
 
     private AgapiController _agapi;
 
@@ -43,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_contacts:
                     inflateMyContentLayout(R.layout.contacts);
-                    Contacts();
+                    setContactsPreview();
                     return true;
 
                 case R.id.navigation_my_profile:
@@ -53,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.navigation_settings:
                     inflateMyContentLayout(R.layout.settings);
-                    Settings();
+                    setSettingsPreview();
 //                    _agapi.reset();
                     return true;
             }
@@ -66,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_REFRESH_AGAPI_TO_MAIN:
                 _agapi.loadUserProfile();
-                _agapi.getUserHealthInformation().loadHealthIssues();
+                _agapi.getUserHealthInformation().load();
 
                 // Check if the user profile exists and is loaded
-                if (_agapi.isUserProfileLoaded()) {
+                if (_agapi.isLoaded()) {
                     // Load main layout
                     setContentView(R.layout.activity_main);
                     // Configure title layout components
@@ -81,11 +90,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case REQUEST_CODE_REFRESH_AGAPI_TO_PROFILE:
                 _agapi.loadUserProfile();
-                _agapi.getUserHealthInformation().loadHealthIssues();
+                _agapi.getUserHealthInformation().load();
                 // Check if the user profile exists and is loaded
-                if (_agapi.isUserProfileLoaded()) {
+                if (_agapi.isLoaded()) {
                     _navigation.setSelectedItemId(R.id.navigation_my_profile);
                 }
+                break;
+            case REQUEST_CODE_REFRESH_AGAPI_TO_CONTACTS:
+                _agapi.getUserAddressBook().load();
+                _navigation.setSelectedItemId(R.id.navigation_contacts);
                 break;
         }
     }
@@ -98,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         _agapi = new AgapiController(this);
 
         // Check if the user profile is loaded and it exists, and inflate appropriate layout
-        if (_agapi.isUserProfileLoaded()) {
+        if (_agapi.isLoaded()) {
             // Load main layout
             setContentView(R.layout.activity_main);
 
@@ -119,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureMainLayout() {
         _myContentLayout = findViewById(R.id.my_content_layout);
-
         _navigation = findViewById(R.id.navigation);
         _navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -246,16 +258,156 @@ public class MainActivity extends AppCompatActivity {
                                 dialog.cancel();
                             }
                         }).show();
-
             }
         });
     }
 
-    private void Contacts() {
+    private void setContactsPreview() {
         setTitle(R.string.title_contacts);
+
+        FloatingActionButton addNewContactButton = findViewById(R.id.contacts_button_add_new);
+        addNewContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ContactCreateFormActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_REFRESH_AGAPI_TO_CONTACTS);
+            }
+        });
+
+        ViewGroup contactsContentLayout = findViewById(R.id.contacts_content_layout);
+
+        LinearLayoutCompat.LayoutParams queueCircleLayoutParams = new LinearLayoutCompat.LayoutParams(
+                (int) getResources().getDimension(R.dimen.contact_queue_circle_diameter),
+                (int) getResources().getDimension(R.dimen.contact_queue_circle_diameter));
+        queueCircleLayoutParams.setMargins(
+                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half));
+
+        LinearLayoutCompat.LayoutParams cardTextLayoutParams = new LinearLayoutCompat.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        cardTextLayoutParams.gravity = Gravity.CENTER;
+
+        LinearLayoutCompat.LayoutParams contactCardLayoutParams = new LinearLayoutCompat.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        contactCardLayoutParams.topMargin = (int) getResources().getDimension(R.dimen.activity_vertical_margin_half);
+        contactCardLayoutParams.leftMargin = (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half);
+        contactCardLayoutParams.rightMargin = (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half);
+
+        TextView noContactsTextView = findViewById(R.id.contacts_text_no_entries);
+        if(_agapi.getUserAddressBook().isEmpty()) {
+            noContactsTextView.setVisibility(View.VISIBLE);
+        } else {
+            noContactsTextView.setVisibility(View.GONE);
+
+            List<Contact> userContacts = _agapi.getUserAddressBook().getContacts();
+            Collections.sort(userContacts);
+            for (final Contact contact : userContacts) {
+
+                CardView contactCard = new CardView(this);
+                contactCard.setLayoutParams(contactCardLayoutParams);
+                contactsContentLayout.addView(contactCard);
+
+                LinearLayoutCompat cardContentLayout = new LinearLayoutCompat(this);
+                cardContentLayout.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                contactCard.addView(cardContentLayout);
+
+                View queueCircle = new View(this);
+                queueCircle.setLayoutParams(queueCircleLayoutParams);
+                queueCircle.setBackground(getDrawable(R.drawable.circle_24dp));
+                ColorStateList queueCircleColorStateList;
+                if (contact.inQueue)
+                    queueCircleColorStateList = getResources().getColorStateList(R.color.color_state_list_in_queue);
+                else
+                    queueCircleColorStateList = getResources().getColorStateList(R.color.color_state_list_not_in_queue);
+                queueCircle.setBackgroundTintList(queueCircleColorStateList);
+                cardContentLayout.addView(queueCircle);
+
+                LinearLayoutCompat cardTextLayout = new LinearLayoutCompat(this);
+                cardTextLayout.setOrientation(LinearLayoutCompat.VERTICAL);
+                cardTextLayout.setLayoutParams(cardTextLayoutParams);
+                cardContentLayout.addView(cardTextLayout);
+
+                TextView cardNameTextView = new TextView(this);
+                cardNameTextView.setPaddingRelative(
+                        (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                        0, 0,
+                        (int) getResources().getDimension(R.dimen.activity_vertical_margin_half));
+                cardNameTextView.setTextSize(18);
+                cardNameTextView.setTypeface(null, Typeface.BOLD);
+                cardNameTextView.setTextColor(getResources().getColor(R.color.colorTextBlack));
+                cardNameTextView.setText(contact.name);
+                cardTextLayout.addView(cardNameTextView);
+
+                TextView cardPhoneTextView = new TextView(this);
+                cardPhoneTextView.setPaddingRelative(
+                        (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                        0, 0, 0);
+                cardPhoneTextView.setTextSize(16);
+                cardPhoneTextView.setText(contact.phone);
+                cardTextLayout.addView(cardPhoneTextView);
+
+                contactCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScrollView contactPreviewContentLayout = new ScrollView(MainActivity.this);
+                        contactPreviewContentLayout.setPadding(
+                                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                                (int) getResources().getDimension(R.dimen.activity_vertical_margin_half),
+                                (int) getResources().getDimension(R.dimen.activity_horizontal_margin_half),
+                                (int) getResources().getDimension(R.dimen.activity_vertical_margin_half));
+                        LayoutInflater inflater = getLayoutInflater();
+                        inflater.inflate(R.layout.form_contact_preview, contactPreviewContentLayout);
+
+                        CheckBox inQueuePreviewCheckBox = contactPreviewContentLayout.findViewById(R.id.form_contact_text_in_queue);
+                        TextView namePreviewTextView = contactPreviewContentLayout.findViewById(R.id.form_contact_text_name);
+                        TextView phonePreviewTextView = contactPreviewContentLayout.findViewById(R.id.form_contact_text_phone);
+                        TextView emailPreviewTextView = contactPreviewContentLayout.findViewById(R.id.form_contact_text_email);
+                        TextView personalMessagePreviewTextView = contactPreviewContentLayout.findViewById(R.id.form_contact_text_personal_message);
+
+                        inQueuePreviewCheckBox.setChecked(contact.inQueue);
+                        inQueuePreviewCheckBox.setText(contact.inQueue ?
+                                R.string.form_contact_text_in_queue : R.string.form_contact_text_not_in_queue);
+                        namePreviewTextView.setText(contact.name);
+                        phonePreviewTextView.setText(contact.phone);
+                        emailPreviewTextView.setText(contact.email);
+                        personalMessagePreviewTextView.setText(contact.personalMessage);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("").setView(contactPreviewContentLayout)
+                                .setPositiveButton("Redaguoti", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(MainActivity.this, ContactCreateFormActivity.class);
+                                        intent.setAction(String.valueOf(contact.id));
+                                        startActivityForResult(intent, REQUEST_CODE_REFRESH_AGAPI_TO_CONTACTS);
+                                    }
+                                })
+                                .setNegativeButton("Grįžti", null)
+                                .setNeutralButton("Ištrinti", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        AlertDialog.Builder deleteConfirmDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                                        deleteConfirmDialogBuilder.setTitle("Dėmesio!")
+                                                .setMessage("Ar tikrai norite ištrinti šį kontaktą?")
+                                                .setPositiveButton("Taip", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        _agapi.getUserAddressBook().deleteContact(contact.id);
+                                                        _navigation.setSelectedItemId(R.id.navigation_contacts);
+                                                    }
+                                                }).setNegativeButton("Ne", null).show();
+                                    }
+                                })
+                                .show();
+                    }
+                });
+            }
+        }
     }
 
-    private void Settings() {
+    private void setSettingsPreview() {
         setTitle(R.string.title_settings);
     }
 
@@ -272,5 +424,4 @@ public class MainActivity extends AppCompatActivity {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
                 context.getResources().getDisplayMetrics());
     }
-
 }

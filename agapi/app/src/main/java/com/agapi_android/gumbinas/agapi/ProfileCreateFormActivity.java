@@ -219,12 +219,12 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
 
         _agapi = new AgapiController(this);
 
-        if (_agapi.isUserProfileLoaded()) {
+        if (_agapi.isLoaded()) {
             setTitle(R.string.form_profile_edit_title);
             _userProfile = _agapi.getUserProfile();
         }
 
-        if (!_agapi.getUserHealthInformation().isHealthIssuesEmpty()) {
+        if (!_agapi.getUserHealthInformation().isEmpty()) {
             _provideHealthInformation = true;
             _userHealthIssues = _agapi.getUserHealthInformation().getHealthIssues();
             for (HealthIssue issue : _userHealthIssues) {

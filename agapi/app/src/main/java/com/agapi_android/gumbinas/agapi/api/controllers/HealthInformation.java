@@ -1,9 +1,8 @@
 package com.agapi_android.gumbinas.agapi.api.controllers;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.agapi_android.gumbinas.agapi.api.enumerators.HealthIssueCategory;
 import com.agapi_android.gumbinas.agapi.api.handlers.AgapiDBHandler;
 import com.agapi_android.gumbinas.agapi.api.models.HealthIssue;
 
@@ -11,15 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealthInformation {
+
     private List<HealthIssue> _healthIssues;
     private AgapiDBHandler _adbHandler;
 
     HealthInformation(AgapiDBHandler adbHandler) {
         _adbHandler = adbHandler;
-        _healthIssues = _adbHandler.getHealthIssues();
+        load();
     }
 
-    public boolean isHealthIssuesEmpty() {
+    public boolean isEmpty() {
         return _healthIssues.isEmpty();
     }
 
@@ -38,13 +38,11 @@ public class HealthInformation {
         return healthIssuesCopy;
     }
 
-    public void loadHealthIssues() {
-        _healthIssues = _adbHandler.getHealthIssues();
+    public void load() {
+        _healthIssues = _adbHandler.getAllHealthIssues();
     }
 
-    public void saveHealthIssues(List<HealthIssue> healthIssues) {
-        assert healthIssues != null;
-
+    public void saveHealthIssues(@NonNull List<HealthIssue> healthIssues) {
         // If no issues present in the database
         if (_healthIssues.isEmpty()) {
             for (HealthIssue healthIssue : healthIssues) {
@@ -101,9 +99,8 @@ public class HealthInformation {
     }
 
     public void clear() {
-        for (HealthIssue issue : _healthIssues) {
+        for (HealthIssue issue : _healthIssues)
             _adbHandler.removeHealthIssue(issue.id);
-        }
         _healthIssues.clear();
     }
 }

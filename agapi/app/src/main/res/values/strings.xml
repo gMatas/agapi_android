@@ -9,7 +9,7 @@
     <string name="dialog_button_cancel">Atšaukti</string>
 
     <!-- Title layout strings -->
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">AGAPI</string>
     <string name="title_my_profile">Mano profilis</string>
     <string name="title_contacts">Kontaktai</string>
     <string name="title_settings">Nustatymai</string>
@@ -28,7 +28,7 @@
     <string name="form_profile_create_input_text_birthdate">Gimimo data *</string>
     <string name="form_profile_create_input_text_phone">Telefonas *</string>
     <string name="form_profile_create_input_text_email">El. paštas</string>
-    <string name="form_profile_create_input_text_street_address">Gatvės adresas *</string>
+    <string name="form_profile_create_input_text_street_address">Gatvės pavadinimas, namas ir buto nr. *</string>
     <string name="form_profile_create_input_text_city">Miestas *</string>
     <string name="form_profile_create_input_text_country">Šalis *</string>
 
@@ -47,10 +47,30 @@
     <string name="form_profile_preview_text_birthdate">Gimimo data</string>
     <string name="form_profile_preview_text_phone">Telefonas</string>
     <string name="form_profile_preview_text_email">El. paštas</string>
-    <string name="form_profile_preview_text_street_address">Gatvės adresas</string>
+    <string name="form_profile_preview_text_street_address">Gatvės pavadinimas, namas ir buto nr.</string>
     <string name="form_profile_preview_text_city">Miestas</string>
     <string name="form_profile_preview_text_country">Šalis</string>
 
+    <!-- Contact create form strings -->
+    <string name="form_contact_edit_title">Kontakto redagavimas</string>
+    <string name="form_contact_create_title">Naujas kontaktas</string>
+    <string name="form_contact_create_button_left">Atšaukti</string>
+    <string name="form_contact_create_button_right">Išsaugoti</string>
+    <string name="form_contact_create_checkbox_in_queue">Ar naudoti šį kontaktą pagalbos iškvietimo metu?</string>
+    <string name="form_contact_create_text_name">Vardas *</string>
+    <string name="form_contact_create_text_phone">Telefono numeris *</string>
+    <string name="form_contact_create_text_email">El. paštas</string>
+    <string name="form_contact_create_text_personal_message">Asmeninė žinutė</string>
+
+    <!-- Contact preview form strings -->
+    <string name="form_contact_preview_text_in_queue">Kontakto būsena</string>
+    <string name="form_contact_text_in_queue">Kontaktas naudojamas pagalbos iškvietimui</string>
+    <string name="form_contact_text_not_in_queue">Kontaktas nebus naudojamas pagalbos iškvietimui</string>
+    <string name="form_contact_preview_text_name">Vardas</string>
+    <string name="form_contact_preview_text_phone">Telefono numeris</string>
+    <string name="form_contact_preview_text_email">El. Paštas</string>
+    <string name="form_contact_preview_text_personal_message">Asmeninė žinutė</string>
+    <string name="form_contact_preview_text_none">Nėra</string>
 </resources>
 
 

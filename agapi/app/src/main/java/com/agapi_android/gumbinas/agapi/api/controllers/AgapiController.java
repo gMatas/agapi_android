@@ -3,12 +3,8 @@ package com.agapi_android.gumbinas.agapi.api.controllers;
 import android.content.Context;
 import android.util.Log;
 
-import com.agapi_android.gumbinas.agapi.MainActivity;
 import com.agapi_android.gumbinas.agapi.api.handlers.AgapiDBHandler;
-import com.agapi_android.gumbinas.agapi.api.models.HealthIssue;
 import com.agapi_android.gumbinas.agapi.api.models.Profile;
-
-import java.util.List;
 
 public class AgapiController {
 
@@ -19,15 +15,16 @@ public class AgapiController {
 
     public AgapiController(Context context) {
         _adbHandler = new AgapiDBHandler(context);
-        loadUserProfile();
         _userHealthInformation = new HealthInformation(_adbHandler);
+        _userAddressBook = new AddressBook(_adbHandler);
+        loadUserProfile();
     }
 
     /**
      * Check if user profile is created and it exits in the database.
      * @return true if user profile exists in the database, else if it's not.
      */
-    public boolean isUserProfileLoaded() {
+    public boolean isLoaded() {
         return _userProfile != null;
     }
 
@@ -49,12 +46,16 @@ public class AgapiController {
         return _userHealthInformation;
     }
 
+    public AddressBook getUserAddressBook() {
+        return _userAddressBook;
+    }
+
     public void loadUserProfile() {
         _userProfile = _adbHandler.getUserProfile();
     }
 
     public void saveUserProfile(Profile profile) {
-        if (isUserProfileLoaded() && _userProfile.id == profile.id) {
+        if (isLoaded() && _userProfile.id == profile.id) {
             _adbHandler.updateUserProfile(profile);
             _userProfile = profile;
 
@@ -72,6 +73,7 @@ public class AgapiController {
 
     public void clear() {
         _userHealthInformation.clear();
+        _userAddressBook.clear();
         _adbHandler.removeUserProfile();
         _userProfile = null;
     }

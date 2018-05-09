@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="Informacija apie pagalbos kontaktą"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="18sp" />
+
+    <!-- In queue -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_contact_preview_text_in_queue" />
+
+        <CheckBox
+            android:id="@+id/form_contact_text_in_queue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_profile_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Name -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_profile_preview_text_name" />
+
+        <TextView
+            android:id="@+id/form_contact_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_contact_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Phone -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_contact_preview_text_phone" />
+
+        <TextView
+            android:id="@+id/form_contact_text_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_contact_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Email -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_contact_preview_text_email" />
+
+        <TextView
+            android:id="@+id/form_contact_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_contact_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <!-- Personal message -->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:textColor="@color/colorAccent"
+            android:text="@string/form_contact_preview_text_personal_message" />
+
+        <TextView
+            android:id="@+id/form_contact_text_personal_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            android:hint="@string/form_contact_preview_text_none" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</android.support.v7.widget.LinearLayoutCompat>
