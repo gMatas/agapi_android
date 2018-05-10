@@ -145,8 +145,7 @@ public class ProfileCreateFormActivity extends AppCompatActivity {
                     til.setError("* Būtina užpildyti");
                 }
             }
-            // TODO: remove isallvalid = true.. it's for debugging!
-            if (isAllValid = true) {
+            if (isAllValid) {
                 // Save profile data to a user profile object
                 _userProfile.firstName = _nameTextInputEditText.getText().toString().trim();
                 _userProfile.lastName = _surnameTextInputEditText.getText().toString().trim();

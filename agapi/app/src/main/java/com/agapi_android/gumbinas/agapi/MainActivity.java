@@ -399,8 +399,7 @@ public class MainActivity extends AppCompatActivity {
                                                     }
                                                 }).setNegativeButton("Ne", null).show();
                                     }
-                                })
-                                .show();
+                                }).show();
                     }
                 });
             }
