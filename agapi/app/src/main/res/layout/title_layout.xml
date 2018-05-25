@@ -25,6 +25,7 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:textSize="18sp"
             android:text="Sukurti profilį" />
         <TextView
             android:id="@+id/title_text_help_button"
@@ -33,7 +34,8 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:text="Apie" />
+            android:text="Apie"
+            android:visibility="gone"/>
 
     </LinearLayout>
     <TextView
@@ -43,6 +45,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:textSize="24sp"
+        android:textColor="@color/colorTextBlack"
+        android:textStyle="bold"
         android:text="@string/app_name" />
     <TextView
         android:id="@+id/title_text_app_version"
@@ -52,7 +57,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:text="TextView" />
+        android:text="versija 0.1b" />
 
 </android.support.constraint.ConstraintLayout>
 

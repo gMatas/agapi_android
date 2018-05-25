@@ -1,20 +1,26 @@
 package com.agapi_android.gumbinas.agapi.api.controllers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.agapi_android.gumbinas.agapi.api.handlers.bluetooth.AgapiBleHandler;
 import com.agapi_android.gumbinas.agapi.api.handlers.AgapiDBHandler;
 import com.agapi_android.gumbinas.agapi.api.models.Profile;
 
 public class AgapiController {
 
+    private Context _context;
+
     private Profile _userProfile;
     private HealthInformation _userHealthInformation;
     private AddressBook _userAddressBook;
     private AgapiDBHandler _adbHandler;
+    private AgapiBleHandler _bleHandler;
 
     public AgapiController(Context context) {
-        _adbHandler = new AgapiDBHandler(context);
+        _context = context;
+        _adbHandler = new AgapiDBHandler(_context);
         _userHealthInformation = new HealthInformation(_adbHandler);
         _userAddressBook = new AddressBook(_adbHandler);
         loadUserProfile();
@@ -48,6 +54,18 @@ public class AgapiController {
 
     public AddressBook getUserAddressBook() {
         return _userAddressBook;
+    }
+
+    public AgapiBleHandler getBleHandler() {
+        return _bleHandler;
+    }
+
+    public void enableBleHandler(Activity activity) {
+        _bleHandler = new AgapiBleHandler(activity);
+    }
+
+    public void disableBleHandler() {
+        _bleHandler = null;
     }
 
     public void loadUserProfile() {
